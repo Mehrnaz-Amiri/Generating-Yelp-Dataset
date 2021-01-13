@@ -1,0 +1,152 @@
+
+
+```{r}
+library(lubridate)
+library(dplyr)
+library(sqldf)
+#  Importing Review Data 
+review <- read.csv("~/Desktop/Reviews_new.csv", sep = ",", header = TRUE, stringsAsFactors=FALSE)
+#  Importing Restaurants Data 
+rest <- read.csv("~/Desktop/Restaurant_info_with_lon&lat.csv", sep = ",", header = TRUE, stringsAsFactors=FALSE)
+# Merging together
+yelp <- merge(review, rest, by = "restaurant_ID")
+class(yelp$REVIEW_DATE)
+
+library(lubridate)
+yelp$REVIEW_DATE <- as.Date(parse_date_time(x = yelp$REVIEW_DATE,
+                orders = c("y-m-d", "y/m/d")))
+
+# Number of reviews in 2019 for each month
+yelp_19 <- yelp[year(ymd(yelp$REVIEW_DATE)) == 2019,]
+table(month(ymd(yelp_19$REVIEW_DATE)))
+# Number of reviews in 2020 for each month
+yelp_20 <- yelp[year(ymd(yelp$REVIEW_DATE)) == 2020,]
+table(month(ymd(yelp_20$REVIEW_DATE)))
+
+        #######################################
+        ####  Longitudinal Review Patterns ####
+        #######################################
+
+############## NUMBER OF REVIEWS IN 2019 #####################
+
+######### reviews_Jan_19 ########
+table(Jan_19$restaurant_ID)
+Jan_19 <- yelp[month(ymd(yelp$REVIEW_DATE)) == 01 & year(ymd(yelp$REVIEW_DATE)) == 2019,]
+reviews_Jan_19 <- melt(table(Jan_19$restaurant_ID),id.vars=c("Jan_19$restaurant_ID"))
+names(reviews_Jan_19)[1] <- 'restaurant_ID'
+names(reviews_Jan_19)[2] <- 'reviews_Jan_19'
+reviews_Jan_19
+######### reviews_Feb_19 ########
+Feb_19 <- yelp[month(ymd(yelp$REVIEW_DATE)) == 02 & year(ymd(yelp$REVIEW_DATE)) == 2019,]
+reviews_Feb_19 <- melt(table(Feb_19$restaurant_ID),id.vars=c("Feb_19$restaurant_ID"))
+names(reviews_Feb_19)[1] <- 'restaurant_ID'
+names(reviews_Feb_19)[2] <- 'reviews_Feb_19'
+
+######### reviews_Mar_19 ########
+Mar_19 <- yelp[month(ymd(yelp$REVIEW_DATE)) == 03 & year(ymd(yelp$REVIEW_DATE)) == 2019,]
+reviews_Mar_19 <- melt(table(Mar_19$restaurant_ID),id.vars=c("Mar_19$restaurant_ID"))
+names(reviews_Mar_19)[1] <- 'restaurant_ID'
+names(reviews_Mar_19)[2] <- 'reviews_Mar_19'
+
+######### reviews_Apr_19 ########
+Apr_19 <- yelp[month(ymd(yelp$REVIEW_DATE)) == 04 & year(ymd(yelp$REVIEW_DATE)) == 2019,]
+reviews_Apr_19 <- melt(table(Apr_19$restaurant_ID),id.vars=c("Apr_19$restaurant_ID"))
+names(reviews_Apr_19)[1] <- 'restaurant_ID'
+names(reviews_Apr_19)[2] <- 'reviews_Apr_19'
+
+######### reviews_May_19 ########
+May_19 <- yelp[month(ymd(yelp$REVIEW_DATE)) == 05 & year(ymd(yelp$REVIEW_DATE)) == 2019,]
+reviews_May_19 <- melt(table(May_19$restaurant_ID),id.vars=c("May_19$restaurant_ID"))
+names(reviews_May_19)[1] <- 'restaurant_ID'
+names(reviews_May_19)[2] <- 'reviews_May_19'
+
+######### reviews_Jun_19 ########
+Jun_19 <- yelp[month(ymd(yelp$REVIEW_DATE)) == 06 & year(ymd(yelp$REVIEW_DATE)) == 2019,]
+reviews_Jun_19 <- melt(table(Jun_19$restaurant_ID),id.vars=c("Jun_19$restaurant_ID"))
+names(reviews_Jun_19)[1] <- 'restaurant_ID'
+names(reviews_Jun_19)[2] <- 'reviews_Jun_19'
+
+######### reviews_Jul_19 ########
+Jul_19 <- yelp[month(ymd(yelp$REVIEW_DATE)) == 07 & year(ymd(yelp$REVIEW_DATE)) == 2019,]
+reviews_Jul_19 <- melt(table(Jul_19$restaurant_ID),id.vars=c("Jul_19$restaurant_ID"))
+names(reviews_Jul_19)[1] <- 'restaurant_ID'
+names(reviews_Jul_19)[2] <- 'reviews_Jul_19'
+
+######### reviews_Aug_19 ########
+Aug_19 <- yelp[month(ymd(yelp$REVIEW_DATE)) == 08 & year(ymd(yelp$REVIEW_DATE)) == 2019,]
+reviews_Aug_19 <- melt(table(Aug_19$restaurant_ID),id.vars=c("Aug_19$restaurant_ID"))
+names(reviews_Aug_19)[1] <- 'restaurant_ID'
+names(reviews_Aug_19)[2] <- 'reviews_Aug_19'
+
+# Merging all 2019 months 
+jan_feb <- merge(reviews_Jan_19, reviews_Feb_19, by = "restaurant_ID", all = TRUE)
+mar_apr <- merge(reviews_Mar_19, reviews_Apr_19, by = "restaurant_ID", all = TRUE)
+may_jun <- merge(reviews_May_19, reviews_Jun_19, by = "restaurant_ID", all = TRUE)
+jul_aug <- merge(reviews_Jul_19, reviews_Aug_19, by = "restaurant_ID", all = TRUE)
+jan_feb_mar_apr <- merge(jan_feb, mar_apr, by = "restaurant_ID", all = TRUE)
+may_jun_jul_aug <- merge(may_jun, jul_aug, by = "restaurant_ID", all = TRUE)
+all_months_19 <- merge(jan_feb_mar_apr, may_jun_jul_aug, by = "restaurant_ID", all = TRUE)
+
+############## NUMBER OF REVIEWS IN 2020 #####################
+
+######### reviews_Jan_20 ########
+Jan_20 <- yelp[month(ymd(yelp$REVIEW_DATE)) == 01 & year(ymd(yelp$REVIEW_DATE)) == 2020,]
+reviews_Jan_20 <- melt(table(Jan_20$restaurant_ID),id.vars=c("Jan_20$restaurant_ID"))
+names(reviews_Jan_20)[1] <- 'restaurant_ID'
+names(reviews_Jan_20)[2] <- 'reviews_Jan_20'
+
+######### reviews_Feb_20 ########
+Feb_20 <- yelp[month(ymd(yelp$REVIEW_DATE)) == 02 & year(ymd(yelp$REVIEW_DATE)) == 2020,]
+reviews_Feb_20 <- melt(table(Feb_20$restaurant_ID),id.vars=c("Feb_20$restaurant_ID"))
+names(reviews_Feb_20)[1] <- 'restaurant_ID'
+names(reviews_Feb_20)[2] <- 'reviews_Feb_20'
+
+######### reviews_Mar_20 ########
+Mar_20 <- yelp[month(ymd(yelp$REVIEW_DATE)) == 03 & year(ymd(yelp$REVIEW_DATE)) == 2020,]
+reviews_Mar_20 <- melt(table(Mar_20$restaurant_ID),id.vars=c("Mar_20$restaurant_ID"))
+names(reviews_Mar_20)[1] <- 'restaurant_ID'
+names(reviews_Mar_20)[2] <- 'reviews_Mar_20'
+
+######### reviews_Apr_20 ########
+Apr_20 <- yelp[month(ymd(yelp$REVIEW_DATE)) == 04 & year(ymd(yelp$REVIEW_DATE)) == 2020,]
+reviews_Apr_20 <- melt(table(Apr_20$restaurant_ID),id.vars=c("Apr_20$restaurant_ID"))
+names(reviews_Apr_20)[1] <- 'restaurant_ID'
+names(reviews_Apr_20)[2] <- 'reviews_Apr_20'
+
+######### reviews_May_20 ########
+May_20 <- yelp[month(ymd(yelp$REVIEW_DATE)) == 05 & year(ymd(yelp$REVIEW_DATE)) == 2020,]
+reviews_May_20 <- melt(table(May_20$restaurant_ID),id.vars=c("May_20$restaurant_ID"))
+names(reviews_May_20)[1] <- 'restaurant_ID'
+names(reviews_May_20)[2] <- 'reviews_May_20'
+
+######### reviews_Jun_20 ########
+Jun_20 <- yelp[month(ymd(yelp$REVIEW_DATE)) == 06 & year(ymd(yelp$REVIEW_DATE)) == 2020,]
+reviews_Jun_20 <- melt(table(Jun_20$restaurant_ID),id.vars=c("Jun_20$restaurant_ID"))
+names(reviews_Jun_20)[1] <- 'restaurant_ID'
+names(reviews_Jun_20)[2] <- 'reviews_Jun_20'
+
+######### reviews_Jul_20 ########
+Jul_20 <- yelp[month(ymd(yelp$REVIEW_DATE)) == 07 & year(ymd(yelp$REVIEW_DATE)) == 2020,]
+reviews_Jul_20 <- melt(table(Jul_20$restaurant_ID),id.vars=c("Jul_20$restaurant_ID"))
+names(reviews_Jul_20)[1] <- 'restaurant_ID'
+names(reviews_Jul_20)[2] <- 'reviews_Jul_20'
+
+# Merging all 2020 months 
+jan_feb <- merge(reviews_Jan_20, reviews_Feb_20, by = "restaurant_ID", all = TRUE)
+mar_apr <- merge(reviews_Mar_20, reviews_Apr_20, by = "restaurant_ID", all = TRUE)
+may_jun <- merge(reviews_May_20, reviews_Jun_20, by = "restaurant_ID", all = TRUE)
+jan_feb_mar_apr <- merge(jan_feb, mar_apr, by = "restaurant_ID", all = TRUE)
+jan_feb_mar_apr_may_jun <- merge(jan_feb_mar_apr, may_jun, by = "restaurant_ID", all = TRUE)
+all_months_20 <- merge(jan_feb_mar_apr_may_jun, reviews_Jul_20, by = "restaurant_ID", all = TRUE)
+
+# Merging all data together
+rests <- merge(all_months_19, all_months_20, by = 'restaurant_ID', all = TRUE)
+rests[is.na(rests)] <- 0
+sum(is.na(rests))
+rests
+
+# Save as csv
+write.csv(rests,"~/Desktop/YELP.Neighborhoods.csv", row.names = FALSE)
+```
+
+
